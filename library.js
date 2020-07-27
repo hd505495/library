@@ -10,7 +10,8 @@ function Book(title, author, isRead) {
   this.author = author;
   this.isRead = isRead;
   this.isReadText = function() {
-    return this.isRead ? `<span><div>Read</div><div>icon</div></span>` : `<span><div>Not Read</div><div>icon</div></span>`
+    return this.isRead ? `<span class="section green" id="isReadText"><div>Read</div><div><i class="fa fa-check"></i></div></span>` 
+                : `<span class="section red" id="isReadText"><div>Not Read</div><div><i class="fa fa-times"></i></div></span>`;
   }
   this.info = function() {
     return `${title} was written by ${author}`;
@@ -32,6 +33,18 @@ function render() {
   library.forEach(function(currentValue, index) {
     cardContainer.innerHTML += generateCard(currentValue, index);
   })
+  cardContainer.innerHTML += generateAddBtn();
+  let addBtn = document.getElementById('addBtn');
+  addBtn.addEventListener('click', generateForm);
+}
+function generateForm() {
+
+}
+
+function generateAddBtn () {
+  return `
+    <button id="addBtn"><i class="fa fa-plus-circle"></i></button>
+  `
 }
 
 function generateCard(data, index) {
@@ -45,6 +58,7 @@ function generateCard(data, index) {
     <span id="author"><b>Author</b></span><br>
     <span id="author-content">${data.author}</span>
   </span>
-  ${data.isReadText}
-</div>`
+  ${data.isReadText()}
+</div>
+`
 }
