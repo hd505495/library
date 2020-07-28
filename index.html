@@ -15,7 +15,31 @@
   <body>
       <h1 id="title">Virtual Library</h1>
     <div id="book-cards"></div>
-    
+    <!-- POPUP FORM FOR ADDING BOOK -->
+    <div id="myModal" class="modal">
+      <form class="modal-content">
+        <div class="modal-header">
+          <p>ADD NEW BOOK</p>
+          <span class="close">&times;</span>
+        </div>
+        <div class="fields">
+          <div class="field-group">
+            <label for="title">Title</label>
+            <input class="field-ctrl" type="text" name="title" required="" autofocus>
+          </div>
+          <div class="field-group">
+            <label for="author">Author</label>
+            <input class="field-ctrl" type="text" name="author" required="">
+          </div>
+        </div>
+        <div id="readSection">
+          <p>I have read this book</p>
+          <input type="radio" name="read">
+        </div>
+        <button type="submit" class="formSubmit" name="Submit">Submit</button>
+      </form>
+    </div>
+    <!----------------------------------------->
     <script src="library.js" async defer></script>
   </body>
 </html>
