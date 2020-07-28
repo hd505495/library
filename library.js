@@ -17,9 +17,6 @@ function Book(title, author, isRead) {
     return this.isRead ? `<span class="section green" id="isReadText"><div>Read</div><div><i class="fa fa-check"></i></div></span>` 
                 : `<span class="section red" id="isReadText"><div>Not Read</div><div><i class="fa fa-times"></i></div></span>`;
   }*/
-  this.info = function() {
-    return `${title} was written by ${author}`;
-  }
 }
 
 Book.prototype.isReadText = function() {
@@ -158,17 +155,17 @@ function alreadyInLibrary(book) {
 
 // Save library to local storage for next refresh
 function saveToLocalStorage() {
-  localStorage.setItem("b-cards", JSON.stringify(library));
+  localStorage.setItem("bo-cards", JSON.stringify(library));
 }
 
 // Load library from storage
 function loadFromLocalStorage(){
-  let loadedLibrary = JSON.parse(localStorage.getItem('b-cards'));
+  let loadedLibrary = JSON.parse(localStorage.getItem('bo-cards'));
   console.table(loadedLibrary);
   // If empty library, load the default books and update library array, else, update library array with previous session library
   if(loadedLibrary === null || loadedLibrary === undefined || loadedLibrary.length == 0){
       loadDefaultBooks();
-      localStorage.setItem("b-cards", JSON.stringify(library));
+      localStorage.setItem("bo-cards", JSON.stringify(library));
   }
   else {
       library = loadedLibrary;
