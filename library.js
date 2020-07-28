@@ -5,7 +5,7 @@ let bookForm = document.querySelector('.modal-content');
 
 let library = [];
 
-// Load library from previous session (if exists)
+// Load library from previous session (if exists) or default library else
 loadFromLocalStorage();
 
 // Book constructor
@@ -15,16 +15,8 @@ function Book(title, author, isRead) {
   this.isRead = isRead;
 }
 
-/*Book.prototype.isReadText = function() {
-  return this.isRead ? `<span class="section green" id="isReadText"><div>Read</div><div><i class="fa fa-check"></i></div></span>` 
-  : `<span class="section red" id="isReadText"><div>Not Read</div><div><i class="fa fa-times"></i></div></span>`;
-
-} */
-
 // Add new book to library
 function addBook(title, author, isRead) {
-  if (isRead == 'on') isRead = true;
-  if (isRead == 'off') isRead = false;
   let book = new Book(title, author, isRead);
 
   if(alreadyInLibrary(book)) {
@@ -39,36 +31,48 @@ function render() {
   // remove card before adding new one
   cardContainer.innerHTML = ''
 
+  // save most recent alterations to library
   saveToLocalStorage();
 
+  // render each book "card" from book objects
   library.forEach(function(currentValue, index) {
     cardContainer.innerHTML += generateCard(currentValue, index);
-    console.log(`generated card from library index ${index}`);
   })
-  cardContainer.innerHTML += generateAddBtn();
+  // append html for 'add new book' button
+  cardContainer.innerHTML += generateAddBtn(); 
+  // grab it from the DOM
   let addBtn = document.getElementById('addBtn');
+  // attach click listener
   addBtn.addEventListener('click', generateForm);
-  let delBtns = document.querySelectorAll('.delete');
 
+  // grab all delete buttons (one from each card)
+  let delBtns = document.querySelectorAll('.delete');
+  // attach a listener to each delete button
+  // which removes that specific book card from library
   delBtns.forEach((button, index) => {
     button.addEventListener('click', function(event) {
-      console.log(`removing card at index ${index}`);
-      library.splice(index, 1);
-      render();
+      library.splice(index, 1); // delete button index = book index
+      render(); // display the change
     });
   })
 
+  // grab all "change read status" buttons
+  // note: only unread book cards contain one,
+  // so correspondance is not 1-to-1
   let readStatusBtns = document.querySelectorAll('.changeReadStatus');
-    readStatusBtns.forEach((button) => {
-      button.addEventListener('click', function(event) {
-        let index = parseInt(event.target.parentNode.parentNode.dataset.key);
-        console.log(`altering card at index ${index}`);
-        library[index].isRead = true;
-        render();
-      });
+  // attach click listeners
+  readStatusBtns.forEach((button) => {
+    button.addEventListener('click', function(event) {
+      // grabs data attribute from parent card element
+      // which corresponds to book index in library
+      let index = parseInt(event.target.parentNode.parentNode.dataset.key);
+      library[index].isRead = true;
+      render(); //display the change
+    });
   })
 }
 
+// show modal
 function generateForm() {
   modal.style.display = "block";
 }
@@ -85,29 +89,14 @@ window.onclick = function(event) {
   }
 } 
 
+// return html for 'add new book' button
 function generateAddBtn () {
   return `
     <button id="addBtn"><i class="fa fa-plus-circle"></i></button>
   `
 }
-/*
-function generateCard(data, index) {
-  return `
-    <div class="card" data-key=${index}>
-      <span class="section">
-        <span id="title"><b>Book Title</b></span><br>
-        <span id="title-content">${data.title}</span>
-      </span>
-      <span class="section">
-        <span id="author"><b>Author</b></span><br>
-        <span id="author-content">${data.author}</span>
-      </span>
-      ${data.isReadText()}
-      ${generateCardButtons(data)}
-    </div>
-    `
-} */
 
+// return appropriate html depending on book.isRead property
 function generateCard(data, index) {
   if (data.isRead) {
     return `
@@ -154,20 +143,18 @@ function generateCard(data, index) {
   }
 }
 
+// submit form functionality
 bookForm.addEventListener('submit', function(event) {
   event.preventDefault();
   const title = this.elements['title'].value;
   const author = this.elements['author'].value;
   const read = this.elements['read'].checked;
-  console.log({title, author, read});
   addBook(title, author, read);
   bookForm.reset();
-  modal.style.display = "none";
+  modal.style.display = "none"; 
 });
 
-
-/* local storage methods */
-//Check if in array
+//Check if book is already in array
 function alreadyInLibrary(book) {
   return library.some(libBook => {
       if(libBook.title === book.title &&
@@ -177,6 +164,8 @@ function alreadyInLibrary(book) {
   })
 }
 
+/* ------LOCAL STORAGE FUNCTIONS------ */
+
 // Save library to local storage for next refresh
 function saveToLocalStorage() {
   localStorage.setItem("myLibrary", JSON.stringify(library));
@@ -185,7 +174,6 @@ function saveToLocalStorage() {
 // Load library from storage
 function loadFromLocalStorage(){
   let loadedLibrary = JSON.parse(localStorage.getItem('myLibrary'));
-  console.table(loadedLibrary);
   // If empty library, load the default books and update library array, else, update library array with previous session library
   if(loadedLibrary === null || loadedLibrary === undefined || loadedLibrary.length == 0){
       loadDefaultBooks();
