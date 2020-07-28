@@ -13,25 +13,20 @@ function Book(title, author, isRead) {
   this.title = title;
   this.author = author;
   this.isRead = isRead;
-  /*this.isReadText = function() {
-    return this.isRead ? `<span class="section green" id="isReadText"><div>Read</div><div><i class="fa fa-check"></i></div></span>` 
-                : `<span class="section red" id="isReadText"><div>Not Read</div><div><i class="fa fa-times"></i></div></span>`;
-  }*/
 }
 
-Book.prototype.isReadText = function() {
+/*Book.prototype.isReadText = function() {
   return this.isRead ? `<span class="section green" id="isReadText"><div>Read</div><div><i class="fa fa-check"></i></div></span>` 
   : `<span class="section red" id="isReadText"><div>Not Read</div><div><i class="fa fa-times"></i></div></span>`;
 
-}
+} */
 
 // Add new book to library
 function addBook(title, author, isRead) {
   if (isRead == 'on') isRead = true;
   if (isRead == 'off') isRead = false;
   let book = new Book(title, author, isRead);
-  //console.log('creating book with info:');
-  //console.log({title, author, isRead});
+
   if(alreadyInLibrary(book)) {
     return;
   }
@@ -95,7 +90,7 @@ function generateAddBtn () {
     <button id="addBtn"><i class="fa fa-plus-circle"></i></button>
   `
 }
-
+/*
 function generateCard(data, index) {
   return `
     <div class="card" data-key=${index}>
@@ -111,22 +106,51 @@ function generateCard(data, index) {
       ${generateCardButtons(data)}
     </div>
     `
-}
+} */
 
-function generateCardButtons(data) {
+function generateCard(data, index) {
   if (data.isRead) {
     return `
-      <span class="section" id="cardButtons">
-        <div class="delete red"><i class="fa fa-trash"></i></div>
-      </span>
-  `}
+      <div class="card" data-key=${index}>
+        <span class="section">
+          <span id="title"><b>Book Title</b></span><br>
+          <span id="title-content">${data.title}</span>
+        </span>
+        <span class="section">
+          <span id="author"><b>Author</b></span><br>
+          <span id="author-content">${data.author}</span>
+        </span>
+        <span class="section green" id="isReadText">
+          <div>Read</div>
+          <div><i class="fa fa-check"></i></div>
+        </span>
+        <span class="section" id="cardButtons">
+          <div class="delete red"><i class="fa fa-trash"></i></div>
+        </span>
+      </div>
+        `
+  }
   else {
     return `
-      <span class="section" id="cardButtons">
-        <div class="delete red"><i class="fa fa-trash"></i></div>
-        <div class="yellow changeReadStatus">I read it!</div>
-      </span>
-    `
+      <div class="card" data-key=${index}>
+        <span class="section">
+          <span id="title"><b>Book Title</b></span><br>
+          <span id="title-content">${data.title}</span>
+        </span>
+        <span class="section">
+          <span id="author"><b>Author</b></span><br>
+          <span id="author-content">${data.author}</span>
+        </span>
+        <span class="section red" id="isReadText">
+          <div>Not Read</div>
+          <div><i class="fa fa-times"></i></div>
+        </span>
+        <span class="section" id="cardButtons">
+          <div class="delete red"><i class="fa fa-trash"></i></div>
+          <div class="yellow changeReadStatus">I read it!</div>
+        </span>
+      </div>
+        `
   }
 }
 
@@ -155,17 +179,17 @@ function alreadyInLibrary(book) {
 
 // Save library to local storage for next refresh
 function saveToLocalStorage() {
-  localStorage.setItem("bo-cards", JSON.stringify(library));
+  localStorage.setItem("myLibrary", JSON.stringify(library));
 }
 
 // Load library from storage
 function loadFromLocalStorage(){
-  let loadedLibrary = JSON.parse(localStorage.getItem('bo-cards'));
+  let loadedLibrary = JSON.parse(localStorage.getItem('myLibrary'));
   console.table(loadedLibrary);
   // If empty library, load the default books and update library array, else, update library array with previous session library
   if(loadedLibrary === null || loadedLibrary === undefined || loadedLibrary.length == 0){
       loadDefaultBooks();
-      localStorage.setItem("bo-cards", JSON.stringify(library));
+      localStorage.setItem("myLibrary", JSON.stringify(library));
   }
   else {
       library = loadedLibrary;
